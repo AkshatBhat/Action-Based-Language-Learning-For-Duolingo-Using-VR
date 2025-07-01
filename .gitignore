@@ -99,3 +99,5 @@ InitTestScene*.unity*
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
 /LanguageAR/LanguageAR/bin/Debug/net8.0/bin/Debug/net8.0/gcloud-key.json
 /LanguageAR/LanguageAR/bin/Debug/net8.0/bin/Debug/net8.0/gemini-key.txt
+/LanguageAR/LanguageAR/bin/Debug/net8.0/gcloud-key.json
+/LanguageAR/LanguageAR/bin/Debug/net8.0/gemini-key.txt
