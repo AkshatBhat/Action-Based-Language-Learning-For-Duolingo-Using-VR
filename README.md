@@ -26,7 +26,6 @@ C#,
 Gemini
 
 
-
 ## Business Impact
 Duolingo World can:
 - Deepen user engagement
@@ -35,11 +34,13 @@ Duolingo World can:
 - Enhance Duolingo’s brand as a leader in immersive, functional language education
 - Support responsible tourism by helping travelers communicate respectfully and engage with local cultures, addressing rising frustration in many cities toward unprepared, non-communicative visitors
 
-# Team
+## Team
 AkshatBhat, Cstokl3, samuelHurh, Aditi135, Willc-1, deeyapatel4
 
 Kohler UIRP Summer 2025 
 
+
+## Youtube Video
 
 ## License
 This project is for demonstration and educational purposes
