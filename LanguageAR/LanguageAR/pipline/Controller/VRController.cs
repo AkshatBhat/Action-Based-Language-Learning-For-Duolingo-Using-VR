@@ -1,144 +1,147 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
 
 namespace LanguageVR.Pipline.Controller
 {
     public class VRController
     {
         private readonly PipelineManager pipelineManager;
+        private bool isRunning = true;
+        private bool isButtonPressed = false;
         private bool isProcessing = false;
+        private byte[] recordedAudio = null;
 
         // VR/Keyboard activation settings
         public ConsoleKey ActivationKey { get; set; } = ConsoleKey.Spacebar;
+        public ConsoleKey ExitKey { get; set; } = ConsoleKey.Escape;
 
         public VRController(PipelineManager pipeline)
         {
             pipelineManager = pipeline;
-
-            Console.WriteLine("VR Controller initialized");
-            Console.WriteLine($"Press {ActivationKey} to activate voice recognition");
-            Console.WriteLine("Press 'Q' to quit");
         }
 
         public async Task StartVRModeAsync()
         {
-            Console.WriteLine("\nVR Mode Started!");
-            Console.WriteLine("====================");
-            Console.WriteLine("This simulates Meta Quest 2 button activation");
-            Console.WriteLine($"Press {ActivationKey} to start listening (like pressing VR controller button)");
-            Console.WriteLine("System will automatically:");
-            Console.WriteLine("   1. Listen for REAL speech from microphone");
-            Console.WriteLine("   2. Detect language from REAL transcription");
-            Console.WriteLine("   3. Send REAL Spanish text to Gemini");
-            Console.WriteLine("   4. Return NPC response based on YOUR voice");
-            Console.WriteLine("\nPress 'Q' to exit VR mode\n");
+            Console.WriteLine("🎮 Ready for interaction!");
+            Console.WriteLine("Press SPACEBAR to start recording");
+            Console.WriteLine("Press SPACEBAR again to stop recording and process\n");
 
-            // Start the main VR loop
+            // Main VR interaction loop
             await VRMainLoopAsync();
         }
 
         private async Task VRMainLoopAsync()
         {
-            while (true)
+            while (isRunning)
             {
-                // Check for key press (simulates VR controller button)
                 if (Console.KeyAvailable)
                 {
-                    ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                    var keyInfo = Console.ReadKey(true);
 
-                    if (keyInfo.Key == ConsoleKey.Q)
+                    if (keyInfo.Key == ExitKey)
                     {
-                        Console.WriteLine("Exiting VR mode...");
+                        Console.WriteLine("\n🚪 Exiting VR mode...");
+                        isRunning = false;
                         break;
                     }
                     else if (keyInfo.Key == ActivationKey && !isProcessing)
                     {
-                        await HandleVRButtonPressAsync();
+                        await HandleButtonToggleAsync();
                     }
                 }
 
-                // Small delay to prevent CPU spinning
-                await Task.Delay(50);
+                await Task.Delay(50); // Small delay to prevent CPU spinning
             }
         }
 
-        private async Task HandleVRButtonPressAsync()
+        private async Task HandleButtonToggleAsync()
         {
-            if (isProcessing)
+            if (!isButtonPressed)
             {
-                Console.WriteLine("Already processing, please wait...");
-                return;
+                // First press - start recording
+                await StartRecordingAsync();
             }
+            else
+            {
+                // Second press - stop recording and process
+                await StopRecordingAndProcessAsync();
+            }
+        }
 
-            isProcessing = true;
-
+        private async Task StartRecordingAsync()
+        {
             try
             {
-                Console.WriteLine("VR Button Activated!");
-                Console.WriteLine("Starting REAL voice recognition pipeline...");
+                isButtonPressed = true;
+                Console.WriteLine("\n🔴 Recording started...");
+                Console.WriteLine("Press SPACEBAR again to stop recording");
 
-                // ONLY use the pipeline manager - NO simulation, NO direct Gemini calls
-                // This calls: Azure Speech -> Language Detection -> Gemini -> Response
-                string result = await pipelineManager.ProcessVoiceInputAsync();
-
-                // Handle the result from the complete pipeline
-                if (result.StartsWith("ERROR:"))
-                {
-                    Console.WriteLine($"Speech recognition error: {result}");
-                }
-                else if (result.Contains("problema técnico"))
-                {
-                    Console.WriteLine($"Technical issue: {result}");
-                }
-                else if (result.Contains("habla en español"))
-                {
-                    Console.WriteLine($"Language info: {result}");
-                    Console.WriteLine("Try speaking in Spanish to get an NPC response");
-                }
-                else
-                {
-                    // Success - got real NPC response from Gemini based on real voice
-                    Console.WriteLine("\n" + new string('=', 50));
-                    Console.WriteLine("NPC RESPONSE (based on your real voice):");
-                    Console.WriteLine($"{result}");
-                    Console.WriteLine(new string('=', 50) + "\n");
-
-                    Console.WriteLine("[Next step: Convert this response to speech for NPC voice]");
-                }
-
-                Console.WriteLine($"\nReady! Press {ActivationKey} again to speak...\n");
+                // Start recording through speech service
+                var speechService = pipelineManager.GetSpeechService();
+                await speechService.StartRecordingAsync();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in VR processing: {ex.Message}");
+                Console.WriteLine($"❌ Failed to start recording: {ex.Message}");
+                isButtonPressed = false;
+            }
+        }
+
+        private async Task StopRecordingAndProcessAsync()
+        {
+            if (isProcessing) return;
+
+            isProcessing = true;
+            isButtonPressed = false;
+
+            try
+            {
+                Console.WriteLine("⏹️ Recording stopped");
+
+                // Stop recording and get audio data
+                var speechService = pipelineManager.GetSpeechService();
+                recordedAudio = await speechService.StopRecordingAsync();
+
+                if (recordedAudio == null || recordedAudio.Length == 0)
+                {
+                    Console.WriteLine("❌ No audio recorded. Try again.");
+                    Console.WriteLine("\nPress SPACEBAR to start recording...\n");
+                    return;
+                }
+
+                Console.WriteLine("🔄 Processing...");
+
+                // Process the recorded audio through the pipeline
+                string result = await pipelineManager.ProcessVoiceInputAsync(recordedAudio);
+
+                if (result.StartsWith("ERROR:"))
+                {
+                    Console.WriteLine("\n🔄 Please try recording again");
+                    Console.WriteLine("💡 Tips: Speak clearly in Spanish\n");
+                }
+                else
+                {
+                    Console.WriteLine("\n✅ Interaction complete!");
+                }
+
+                Console.WriteLine("\nPress SPACEBAR to start new recording...\n");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Processing error: {ex.Message}");
+                Console.WriteLine("\nPress SPACEBAR to try again...\n");
             }
             finally
             {
                 isProcessing = false;
+                recordedAudio = null;
             }
-        }
-
-        public void ShowCommands()
-        {
-            Console.WriteLine("\nVR Controller Commands:");
-            Console.WriteLine($"{ActivationKey} - Activate REAL voice recognition");
-            Console.WriteLine("Q - Quit VR mode");
-            Console.WriteLine("\nSpeak these Spanish phrases into your microphone:");
-            Console.WriteLine("• Hola, ¿dónde están las manzanas?");
-            Console.WriteLine("• ¿Cuánto cuesta la leche?");
-            Console.WriteLine("• Disculpe, ¿dónde está la caja?");
-            Console.WriteLine("• Necesito ayuda, por favor");
-        }
-
-        public void SetActivationKey(ConsoleKey key)
-        {
-            ActivationKey = key;
-            Console.WriteLine($"Activation key set to: {key}");
         }
 
         public void Dispose()
         {
+            isRunning = false;
             // PipelineManager handles all service disposal
         }
     }
