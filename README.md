@@ -13,10 +13,10 @@ We are developing Duolingo World — an action-based language rehearsal feature 
 Duolingo World will place learners in realistic VR scenes (like grocery stores) where they interact with NPCs, ask questions, check out, and solve spontaneous challenges using their target language.
 
 ## Key elements include:
-Immersive VR environments (Quest 2 hardware)
-Voice recognition for conversational practice
-Dynamic quests with authentic language
-This approach bridges the gap between memorized vocabulary and true language fluency — helping learners live their language, not just memorize it.
+- Immersive VR environments (Quest 2 hardware)
+- Voice recognition for conversational practice
+- Dynamic quests with authentic language
+- This approach bridges the gap between memorized vocabulary and true language fluency — helping learners live their language, not just memorize it.
 
 ## Tech Stack
 Unity 6,
@@ -37,6 +37,7 @@ Duolingo World can:
 
 # Team
 AkshatBhat, Cstokl3, samuelHurh, Aditi135, Willc-1, deeyapatel4
+
 Kohler UIRP Summer 2025 
 
 
