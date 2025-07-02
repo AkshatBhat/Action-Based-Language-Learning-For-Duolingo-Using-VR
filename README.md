@@ -33,6 +33,16 @@ Flask API
 - click the new reference to the project in the hub.
 - Press play in the unity editor when the project launches with an oculus quest setup and connected
 
+##Challenges
+- Allowing the quest headset to sleep causes meta quest link to disconnect --> unity and meta quest link need to restart
+- VSCode issues had certain c# scripts referring to older versions of other c# scripts leading to invisible bugs
+- Integrating google cloud speech to text and text to speech APIs with Unity
+- Cross-Platform issues with MacOS and WindowsOS
+
+##Future Goals
+- Finish detailing the VR scene
+- Integrate the tts unity scene with the vr scene via a helper NPC
+- Procedural grocery lists and item location for more thorough learning
 
 ## Business Impact
 Duolingo World can:
