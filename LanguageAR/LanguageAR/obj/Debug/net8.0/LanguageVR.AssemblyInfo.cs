@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LanguageVR")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eb69ee698f27caf0d1a213ea6c02e301a8f22415")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d982bf5daa1677d8e062484e644ff8b02d500ba3")]
 [assembly: System.Reflection.AssemblyProductAttribute("LanguageVR")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LanguageVR")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
