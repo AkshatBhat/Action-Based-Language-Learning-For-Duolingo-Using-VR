@@ -23,7 +23,15 @@ Unity 6,
 Google Cloud Platform,
 .NET framework,
 C#,
-Gemini
+Gemini 2.0-Flash API
+Python
+Flask API
+
+## To Launch
+Install the newest version of unity 6000.1.9f1
+Pull this repo, click Add and add from disk, then navigate within VR_Scene within the repo and click open
+click the new reference to the project in the hub.
+Press play in the unity editor when the project launches with an oculus quest setup and connected
 
 
 ## Business Impact
